@@ -1,0 +1,2726 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Fishing Frenzy</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #12314d,
+            #06111e 70%
+        );
+
+    font-family: Arial, sans-serif;
+
+    color: white;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+    overflow-x: hidden;
+
+}
+
+
+/* ==================================================
+   MAIN LAYOUT
+================================================== */
+
+.game-layout {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+
+/* ==================================================
+   GAME
+================================================== */
+
+#gameContainer {
+
+    position: relative;
+
+    width: 700px;
+
+    max-width: 90vw;
+
+}
+
+
+canvas {
+
+    display: block;
+
+    width: 700px;
+
+    max-width: 90vw;
+
+    height: auto;
+
+    border: 3px solid white;
+
+    border-radius: 14px;
+
+    background: #159ac9;
+
+    box-shadow:
+        0 0 30px rgba(0, 190, 255, 0.45);
+
+}
+
+
+/* ==================================================
+   TOP UI
+================================================== */
+
+#topInfo {
+
+    position: absolute;
+
+    top: 12px;
+
+    left: 18px;
+
+    right: 18px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    text-shadow:
+        2px 2px 3px black;
+
+    z-index: 10;
+
+    pointer-events: none;
+
+}
+
+
+#levelInfo {
+
+    position: absolute;
+
+    top: 42px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    text-shadow:
+        2px 2px 3px black;
+
+    z-index: 10;
+
+    white-space: nowrap;
+
+}
+
+
+/* ==================================================
+   TIMER
+================================================== */
+
+#timerContainer {
+
+    position: absolute;
+
+    top: 70px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 70%;
+
+    height: 20px;
+
+    border:
+        2px solid white;
+
+    border-radius: 12px;
+
+    background:
+        rgba(0, 0, 0, 0.45);
+
+    overflow: hidden;
+
+    z-index: 10;
+
+}
+
+
+#timerBar {
+
+    width: 100%;
+
+    height: 100%;
+
+    background: #2ee66b;
+
+    transition:
+        width 0.1s linear;
+
+}
+
+
+#timerText {
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    line-height: 16px;
+
+    text-shadow:
+        1px 1px 2px black;
+
+}
+
+
+/* ==================================================
+   MESSAGE
+================================================== */
+
+#message {
+
+    position: absolute;
+
+    top: 100px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 90%;
+
+    text-align: center;
+
+    font-size: 19px;
+
+    font-weight: bold;
+
+    text-shadow:
+        2px 2px 4px black;
+
+    z-index: 10;
+
+    pointer-events: none;
+
+}
+
+
+/* ==================================================
+   UPGRADE
+================================================== */
+
+#buttons {
+
+    position: absolute;
+
+    bottom: 18px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 20;
+
+}
+
+
+button {
+
+    border: none;
+
+    border-radius: 9px;
+
+    padding:
+        12px 18px;
+
+    background: #ffb703;
+
+    color: #111;
+
+    font-weight: bold;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 0 #a86e00;
+
+}
+
+
+button:hover {
+
+    background: #ffd166;
+
+}
+
+
+button:active {
+
+    transform:
+        translateY(3px);
+
+    box-shadow:
+        0 1px 0 #a86e00;
+
+}
+
+
+/* ==================================================
+   HOW TO PLAY
+================================================== */
+
+#controls {
+
+    width: 220px;
+
+    padding: 18px;
+
+    background:
+        rgba(0, 0, 0, 0.78);
+
+    border:
+        1px solid #00d9ff;
+
+    border-radius: 12px;
+
+    line-height: 1.5;
+
+    font-size: 13px;
+
+    box-shadow:
+        0 0 15px rgba(0, 200, 255, 0.2);
+
+}
+
+
+#controls h3 {
+
+    color: #00d9ff;
+
+    margin-bottom: 10px;
+
+}
+
+
+#controls p {
+
+    margin-bottom: 10px;
+
+}
+
+
+/* ==================================================
+   MOBILE BUTTON
+================================================== */
+
+#mobileControls {
+
+    display: none;
+
+    position: absolute;
+
+    bottom: 75px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    gap: 20px;
+
+    z-index: 30;
+
+}
+
+
+.moveButton {
+
+    width: 70px;
+
+    height: 50px;
+
+    font-size: 24px;
+
+    padding: 0;
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media(max-width: 1000px) {
+
+    .game-layout {
+
+        flex-direction: column;
+
+    }
+
+    #controls {
+
+        width: 700px;
+
+        max-width: 90vw;
+
+    }
+
+}
+
+
+@media(max-width: 700px) {
+
+    body {
+
+        padding: 5px;
+
+    }
+
+    #mobileControls {
+
+        display: flex;
+
+    }
+
+    #controls {
+
+        display: none;
+
+    }
+
+    #topInfo {
+
+        font-size: 12px;
+
+    }
+
+    #levelInfo {
+
+        font-size: 16px;
+
+    }
+
+    #message {
+
+        font-size: 15px;
+
+    }
+
+}
+
+
+/* ==================================================
+   GAME OVER
+================================================== */
+
+#gameOverScreen {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(0, 0, 0, 0.72);
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-direction: column;
+
+    z-index: 50;
+
+    border-radius: 12px;
+
+    text-align: center;
+
+}
+
+
+#gameOverScreen h1 {
+
+    color: #ff4d4d;
+
+    font-size: 48px;
+
+    margin-bottom: 15px;
+
+}
+
+
+#gameOverScreen p {
+
+    font-size: 20px;
+
+    margin-bottom: 8px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="game-layout">
+
+
+    <!-- =========================================
+         GAME CONTAINER
+    ========================================== -->
+
+    <div id="gameContainer">
+
+
+        <canvas
+            id="game"
+            width="700"
+            height="700">
+        </canvas>
+
+
+        <!-- TOP INFO -->
+
+        <div id="topInfo">
+
+            <div>
+                💰 $<span id="money">0</span>
+            </div>
+
+            <div>
+                🎯 $<span id="quota">100</span>
+            </div>
+
+            <div>
+                🏆 LV <span id="highScore">0</span>
+            </div>
+
+        </div>
+
+
+        <!-- LEVEL -->
+
+        <div id="levelInfo">
+
+            🎮 LEVEL
+            <span id="level">1</span>
+
+        </div>
+
+
+        <!-- TIMER -->
+
+        <div id="timerContainer">
+
+            <div id="timerBar"></div>
+
+            <div id="timerText">
+                120s
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGE -->
+
+        <div id="message">
+
+            🎣 Press SPACE to cast!
+
+        </div>
+
+
+        <!-- UPGRADE -->
+
+        <div id="buttons">
+
+            <button id="upgradeBtn">
+
+                ⚡ Upgrade ($100)
+
+            </button>
+
+        </div>
+
+
+        <!-- MOBILE -->
+
+        <div id="mobileControls">
+
+            <button
+                class="moveButton"
+                id="leftBtn">
+
+                ⬅️
+
+            </button>
+
+
+            <button
+                class="moveButton"
+                id="rightBtn">
+
+                ➡️
+
+            </button>
+
+        </div>
+
+
+        <!-- GAME OVER -->
+
+        <div id="gameOverScreen">
+
+            <h1>
+                TIME'S UP!
+            </h1>
+
+            <p>
+                🎮 Level:
+                <span id="finalLevel">
+                    1
+                </span>
+            </p>
+
+            <p>
+                💰 Money:
+                $<span id="finalMoney">
+                    0
+                </span>
+            </p>
+
+            <p>
+                🏆 Best Level:
+                <span id="finalHighScore">
+                    0
+                </span>
+            </p>
+
+            <br>
+
+            <p>
+                Press R untuk bermain lagi
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================================
+         HOW TO PLAY
+    ========================================== -->
+
+    <div id="controls">
+
+        <h3>
+            🎮 HOW TO PLAY
+        </h3>
+
+        <p>
+            ⌨️ <b>A / D</b>
+            atau
+            <b>← / →</b>
+            untuk menggerakkan kail.
+        </p>
+
+        <p>
+            SPACE = 🎣 mulai memancing.
+        </p>
+
+        <p>
+            Kail turun otomatis.
+            Sampai dasar → otomatis naik.
+        </p>
+
+        <p>
+            🐟 Arahkan kail ke ikan
+            untuk menangkapnya.
+        </p>
+
+        <p>
+            🔄 Ikan baru muncul
+            setelah 1,5 detik.
+        </p>
+
+        <p>
+            🎯 Capai quota untuk
+            naik LEVEL.
+        </p>
+
+        <p>
+            ⏱️ Total waktu:
+            <b>120 detik</b>.
+        </p>
+
+        <p>
+            🏆 High Score =
+            level tertinggi.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+// ==================================================
+// CANVAS
+// ==================================================
+
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+// ==================================================
+// UI ELEMENTS
+// ==================================================
+
+const moneyText =
+    document.getElementById("money");
+
+const quotaText =
+    document.getElementById("quota");
+
+const levelText =
+    document.getElementById("level");
+
+const highScoreText =
+    document.getElementById("highScore");
+
+const timerBar =
+    document.getElementById("timerBar");
+
+const timerText =
+    document.getElementById("timerText");
+
+const message =
+    document.getElementById("message");
+
+const upgradeBtn =
+    document.getElementById("upgradeBtn");
+
+const gameOverScreen =
+    document.getElementById(
+        "gameOverScreen"
+    );
+
+const finalLevel =
+    document.getElementById(
+        "finalLevel"
+    );
+
+const finalMoney =
+    document.getElementById(
+        "finalMoney"
+    );
+
+const finalHighScore =
+    document.getElementById(
+        "finalHighScore"
+    );
+
+
+// ==================================================
+// GAME VARIABLES
+// ==================================================
+
+let money = 0;
+
+let level = 1;
+
+let quota = 100;
+
+
+// ==================================================
+// HIGH SCORE
+// ==================================================
+
+let highScore =
+    Number(
+        localStorage.getItem(
+            "fishingHighScore"
+        )
+    ) || 0;
+
+
+// ==================================================
+// TIMER
+// ==================================================
+
+const TOTAL_TIME = 120;
+
+let timeLeft =
+    TOTAL_TIME;
+
+
+// ==================================================
+// GAME STATE
+// ==================================================
+
+let gameOver = false;
+
+
+// ==================================================
+// PLAYER / HOOK
+// ==================================================
+
+const hook = {
+
+    x: 350,
+
+    y: 175,
+
+    speedX: 6,
+
+    speedY: 3,
+
+    state: "idle"
+
+};
+
+
+const TOP_Y = 175;
+
+const BOTTOM_Y = 625;
+
+
+// ==================================================
+// INPUT
+// ==================================================
+
+let moveLeft = false;
+
+let moveRight = false;
+
+
+// ==================================================
+// UPGRADE
+// ==================================================
+
+let upgradeLevel = 1;
+
+let upgradeCost = 100;
+
+
+// ==================================================
+// FISH
+// ==================================================
+
+let fishes = [];
+
+
+// ==================================================
+// RESPawn QUEUE
+// ==================================================
+
+let respawnTimers = [];
+
+
+// ==================================================
+// BUBBLES
+// ==================================================
+
+let bubbles = [];
+
+
+// ==================================================
+// COLORS
+// ==================================================
+
+const fishColors = [
+
+    "#ff4d6d",
+
+    "#ffb703",
+
+    "#06d6a0",
+
+    "#8338ec",
+
+    "#fb5607",
+
+    "#00b4d8"
+
+];
+
+
+// ==================================================
+// RANDOM COLOR
+// ==================================================
+
+function randomFishColor() {
+
+    return fishColors[
+        Math.floor(
+            Math.random()
+            *
+            fishColors.length
+        )
+    ];
+
+}
+
+
+// ==================================================
+// CREATE ONE FISH
+// ==================================================
+
+function addFish() {
+
+    const size =
+        Math.random() * 24 + 32;
+
+
+    const rarity =
+        Math.random();
+
+
+    let value;
+
+
+    if (rarity < 0.08) {
+
+        value = 100;
+
+    }
+
+    else if (rarity < 0.25) {
+
+        value = 50;
+
+    }
+
+    else if (rarity < 0.55) {
+
+        value = 25;
+
+    }
+
+    else {
+
+        value = 10;
+
+    }
+
+
+    const fish = {
+
+        x:
+            Math.random() * 570 + 50,
+
+        y:
+            Math.random() * 250 + 350,
+
+        width:
+            size,
+
+        height:
+            size * 0.55,
+
+        speed:
+            Math.random() * 1.2 + 0.4,
+
+        direction:
+            Math.random() < 0.5
+            ? -1
+            : 1,
+
+        value:
+            value,
+
+        color:
+            randomFishColor()
+
+    };
+
+
+    fishes.push(fish);
+
+}
+
+
+// ==================================================
+// CREATE 3–7 FISH
+// ==================================================
+
+function createFish() {
+
+    fishes = [];
+
+    respawnTimers = [];
+
+
+    const amount =
+        Math.floor(
+            Math.random() * 5
+        ) + 3;
+
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        addFish();
+
+    }
+
+}
+
+
+// ==================================================
+// BUBBLES
+// ==================================================
+
+function createBubbles() {
+
+    bubbles = [];
+
+
+    for (
+        let i = 0;
+        i < 35;
+        i++
+    ) {
+
+        bubbles.push({
+
+            x:
+                Math.random()
+                * canvas.width,
+
+            y:
+                Math.random()
+                * 400 + 280,
+
+            size:
+                Math.random() * 4 + 2,
+
+            speed:
+                Math.random() * 0.8 + 0.3
+
+        });
+
+    }
+
+}
+
+
+// ==================================================
+// START LEVEL
+// ==================================================
+
+function startLevel() {
+
+    hook.x =
+        canvas.width / 2;
+
+    hook.y =
+        TOP_Y;
+
+    hook.state =
+        "idle";
+
+
+    createFish();
+
+
+    message.textContent =
+        "🎣 Press SPACE to cast!";
+
+
+    updateUI();
+
+}
+
+
+// ==================================================
+// KEYBOARD DOWN
+// ==================================================
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+
+        // SPACE
+
+        if (
+            e.code === "Space"
+        ) {
+
+            e.preventDefault();
+
+
+            if (
+                gameOver
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                hook.state === "idle"
+            ) {
+
+                hook.state =
+                    "descending";
+
+
+                message.textContent =
+                    "🎣 Kail turun!";
+
+            }
+
+        }
+
+
+        // LEFT
+
+        if (
+            e.key === "a"
+            ||
+            e.key === "A"
+            ||
+            e.key === "ArrowLeft"
+        ) {
+
+            moveLeft = true;
+
+        }
+
+
+        // RIGHT
+
+        if (
+            e.key === "d"
+            ||
+            e.key === "D"
+            ||
+            e.key === "ArrowRight"
+        ) {
+
+            moveRight = true;
+
+        }
+
+
+        // RESTART
+
+        if (
+            (
+                e.key === "r"
+                ||
+                e.key === "R"
+            )
+            &&
+            gameOver
+        ) {
+
+            restartGame();
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// KEYBOARD UP
+// ==================================================
+
+document.addEventListener(
+    "keyup",
+    function(e) {
+
+
+        if (
+            e.key === "a"
+            ||
+            e.key === "A"
+            ||
+            e.key === "ArrowLeft"
+        ) {
+
+            moveLeft = false;
+
+        }
+
+
+        if (
+            e.key === "d"
+            ||
+            e.key === "D"
+            ||
+            e.key === "ArrowRight"
+        ) {
+
+            moveRight = false;
+
+        }
+
+    }
+);
+
+
+// ==================================================
+// HOOK UPDATE
+// ==================================================
+
+function updateHook() {
+
+
+    // Horizontal movement
+
+    if (moveLeft) {
+
+        hook.x -=
+            hook.speedX;
+
+    }
+
+
+    if (moveRight) {
+
+        hook.x +=
+            hook.speedX;
+
+    }
+
+
+    // Boundaries
+
+    if (
+        hook.x < 25
+    ) {
+
+        hook.x = 25;
+
+    }
+
+
+    if (
+        hook.x >
+        canvas.width - 25
+    ) {
+
+        hook.x =
+            canvas.width - 25;
+
+    }
+
+
+    // Descending
+
+    if (
+        hook.state ===
+        "descending"
+    ) {
+
+        hook.y +=
+            hook.speedY;
+
+
+        if (
+            hook.y >= BOTTOM_Y
+        ) {
+
+            hook.y =
+                BOTTOM_Y;
+
+
+            hook.state =
+                "ascending";
+
+
+            message.textContent =
+                "⬆️ Kail naik!";
+
+        }
+
+    }
+
+
+    // Ascending
+
+    else if (
+        hook.state ===
+        "ascending"
+    ) {
+
+        hook.y -=
+            hook.speedY;
+
+
+        if (
+            hook.y <= TOP_Y
+        ) {
+
+            hook.y =
+                TOP_Y;
+
+
+            hook.state =
+                "idle";
+
+
+            message.textContent =
+                "🎣 Press SPACE to cast!";
+
+        }
+
+    }
+
+}
+
+
+// ==================================================
+// FISH UPDATE
+// ==================================================
+
+function updateFish() {
+
+    for (
+        const fish of fishes
+    ) {
+
+        fish.x +=
+            fish.speed
+            *
+            fish.direction;
+
+
+        if (
+            fish.x < 30
+        ) {
+
+            fish.x = 30;
+
+            fish.direction = 1;
+
+        }
+
+
+        if (
+            fish.x + fish.width
+            >
+            canvas.width - 30
+        ) {
+
+            fish.x =
+                canvas.width
+                -
+                fish.width
+                -
+                30;
+
+            fish.direction = -1;
+
+        }
+
+    }
+
+}
+
+
+// ==================================================
+// FISH RESPAWN
+// ==================================================
+
+function updateFishRespawn(
+    deltaTime
+) {
+
+    for (
+        let i =
+            respawnTimers.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+
+        respawnTimers[i] -=
+            deltaTime;
+
+
+        if (
+            respawnTimers[i] <= 0
+        ) {
+
+
+            if (
+                !gameOver
+            ) {
+
+                addFish();
+
+            }
+
+
+            respawnTimers.splice(
+                i,
+                1
+            );
+
+        }
+
+    }
+
+}
+
+
+// ==================================================
+// COLLISION
+// ==================================================
+
+function checkCollision() {
+
+
+    if (
+        hook.state === "idle"
+    ) {
+
+        return;
+
+    }
+
+
+    for (
+        let i =
+            fishes.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+
+        const fish =
+            fishes[i];
+
+
+        const hookLeft =
+            hook.x - 10;
+
+        const hookRight =
+            hook.x + 10;
+
+        const hookTop =
+            hook.y;
+
+        const hookBottom =
+            hook.y + 35;
+
+
+        const fishLeft =
+            fish.x - 15;
+
+        const fishRight =
+            fish.x
+            +
+            fish.width
+            +
+            15;
+
+        const fishTop =
+            fish.y - 20;
+
+        const fishBottom =
+            fish.y
+            +
+            fish.height
+            +
+            20;
+
+
+        if (
+
+            hookLeft <
+            fishRight
+
+            &&
+
+            hookRight >
+            fishLeft
+
+            &&
+
+            hookTop <
+            fishBottom
+
+            &&
+
+            hookBottom >
+            fishTop
+
+        ) {
+
+
+            catchFish(i);
+
+
+            // Satu frame jangan tangkap
+            // ikan lain juga
+
+            return;
+
+        }
+
+    }
+
+}
+
+
+// ==================================================
+// CATCH FISH
+// ==================================================
+
+function catchFish(index) {
+
+    const fish =
+        fishes[index];
+
+
+    // MONEY
+
+    money +=
+        fish.value;
+
+
+    message.textContent =
+        "🐟 +$"
+        +
+        fish.value;
+
+
+    // REMOVE FISH
+
+    fishes.splice(
+        index,
+        1
+    );
+
+
+    // ==========================================
+    // RESPawn 1.5 DETIK
+    // ==========================================
+
+    respawnTimers.push(
+        1.5
+    );
+
+
+    updateUI();
+
+
+    checkQuota();
+
+}
+
+
+// ==================================================
+// QUOTA
+// ==================================================
+
+function checkQuota() {
+
+
+    if (
+        money >= quota
+    ) {
+
+        // LEVEL UP
+
+        level++;
+
+
+        // HIGH SCORE
+
+        if (
+            level > highScore
+        ) {
+
+            highScore =
+                level;
+
+
+            localStorage.setItem(
+                "fishingHighScore",
+                highScore
+            );
+
+        }
+
+
+        // QUOTA NAIK 50%
+
+        quota =
+            Math.ceil(
+                quota * 1.5
+            );
+
+
+        // FISH RESET 3–7
+
+        createFish();
+
+
+        // KAIL KEMBALI ATAS
+
+        hook.x =
+            canvas.width / 2;
+
+        hook.y =
+            TOP_Y;
+
+        hook.state =
+            "idle";
+
+
+        message.textContent =
+            "🎉 LEVEL UP! LEVEL "
+            +
+            level;
+
+
+        updateUI();
+
+    }
+
+}
+
+
+// ==================================================
+// TIMER
+// ==================================================
+
+function updateTimer(
+    deltaTime
+) {
+
+
+    if (
+        gameOver
+    ) {
+
+        return;
+
+    }
+
+
+    // TIMER TERUS BERJALAN
+
+    timeLeft -=
+        deltaTime;
+
+
+    if (
+        timeLeft <= 0
+    ) {
+
+        timeLeft = 0;
+
+
+        endGame();
+
+
+        return;
+
+    }
+
+
+    updateUI();
+
+}
+
+
+// ==================================================
+// END GAME
+// ==================================================
+
+function endGame() {
+
+    gameOver = true;
+
+
+    hook.state =
+        "idle";
+
+
+    // Update high score
+
+    if (
+        level > highScore
+    ) {
+
+        highScore =
+            level;
+
+
+        localStorage.setItem(
+            "fishingHighScore",
+            highScore
+        );
+
+    }
+
+
+    finalLevel.textContent =
+        level;
+
+
+    finalMoney.textContent =
+        money;
+
+
+    finalHighScore.textContent =
+        highScore;
+
+
+    gameOverScreen.style.display =
+        "flex";
+
+
+    message.textContent =
+        "⏱️ TIME'S UP!";
+
+
+    updateUI();
+
+}
+
+
+// ==================================================
+// RESTART
+// ==================================================
+
+function restartGame() {
+
+    money = 0;
+
+    level = 1;
+
+    quota = 100;
+
+    timeLeft =
+        TOTAL_TIME;
+
+    gameOver = false;
+
+    upgradeLevel = 1;
+
+    upgradeCost = 100;
+
+    hook.speedX = 6;
+
+    hook.x =
+        canvas.width / 2;
+
+    hook.y =
+        TOP_Y;
+
+    hook.state =
+        "idle";
+
+    fishes = [];
+
+    respawnTimers = [];
+
+
+    gameOverScreen.style.display =
+        "none";
+
+
+    createFish();
+
+
+    updateUI();
+
+
+    message.textContent =
+        "🎣 Press SPACE to cast!";
+
+}
+
+
+// ==================================================
+// UPGRADE
+// ==================================================
+
+upgradeBtn.addEventListener(
+    "click",
+    function() {
+
+
+        if (
+            gameOver
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            money <
+            upgradeCost
+        ) {
+
+            message.textContent =
+                "💰 Money belum cukup!";
+
+            return;
+
+        }
+
+
+        money -=
+            upgradeCost;
+
+
+        upgradeLevel++;
+
+
+        // Kail semakin cepat
+
+        hook.speedX +=
+            2;
+
+
+        // Upgrade semakin mahal
+
+        upgradeCost =
+            Math.ceil(
+                upgradeCost * 1.8
+            );
+
+
+        message.textContent =
+            "⚡ SPEED LEVEL "
+            +
+            upgradeLevel;
+
+
+        updateUI();
+
+    }
+);
+
+
+// ==================================================
+// MOBILE BUTTONS
+// ==================================================
+
+const leftBtn =
+    document.getElementById(
+        "leftBtn"
+    );
+
+const rightBtn =
+    document.getElementById(
+        "rightBtn"
+    );
+
+
+leftBtn.addEventListener(
+    "touchstart",
+    function(e) {
+
+        e.preventDefault();
+
+        moveLeft = true;
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+leftBtn.addEventListener(
+    "touchend",
+    function(e) {
+
+        e.preventDefault();
+
+        moveLeft = false;
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+rightBtn.addEventListener(
+    "touchstart",
+    function(e) {
+
+        e.preventDefault();
+
+        moveRight = true;
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+rightBtn.addEventListener(
+    "touchend",
+    function(e) {
+
+        e.preventDefault();
+
+        moveRight = false;
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+// ==================================================
+// BUBBLES UPDATE
+// ==================================================
+
+function updateBubbles() {
+
+    for (
+        const bubble of bubbles
+    ) {
+
+        bubble.y -=
+            bubble.speed;
+
+
+        if (
+            bubble.y < 280
+        ) {
+
+            bubble.y = 690;
+
+            bubble.x =
+                Math.random()
+                *
+                canvas.width;
+
+        }
+
+    }
+
+}
+
+
+// ==================================================
+// DRAW SKY
+// ==================================================
+
+function drawSky() {
+
+    ctx.fillStyle =
+        "#78d7ff";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        280
+    );
+
+
+    // SUN
+
+    ctx.fillStyle =
+        "#ffd166";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        590,
+        80,
+        42,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // CLOUD
+
+    ctx.fillStyle =
+        "rgba(255,255,255,0.85)";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        120,
+        105,
+        28,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        155,
+        90,
+        38,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.arc(
+        200,
+        105,
+        28,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+}
+
+
+// ==================================================
+// DRAW WATER
+// ==================================================
+
+function drawWater() {
+
+    ctx.fillStyle =
+        "#087ea4";
+
+
+    ctx.fillRect(
+        0,
+        280,
+        canvas.width,
+        420
+    );
+
+
+    // WATER LINES
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,0.13)";
+
+    ctx.lineWidth = 2;
+
+
+    for (
+        let y = 300;
+        y < 700;
+        y += 35
+    ) {
+
+        ctx.beginPath();
+
+
+        for (
+            let x = 0;
+            x < canvas.width;
+            x += 30
+        ) {
+
+            ctx.moveTo(
+                x,
+                y
+            );
+
+
+            ctx.quadraticCurveTo(
+                x + 15,
+                y - 5,
+                x + 30,
+                y
+            );
+
+        }
+
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+// ==================================================
+// DRAW BOAT
+// ==================================================
+
+function drawBoat() {
+
+
+    // BOAT BODY
+
+    ctx.fillStyle =
+        "#8b4513";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        220,
+        140
+    );
+
+    ctx.lineTo(
+        480,
+        140
+    );
+
+    ctx.lineTo(
+        440,
+        205
+    );
+
+    ctx.lineTo(
+        260,
+        205
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    // BOAT TOP
+
+    ctx.fillStyle =
+        "#d2691e";
+
+
+    ctx.fillRect(
+        210,
+        130,
+        280,
+        18
+    );
+
+
+    // PERSON HEAD
+
+    ctx.fillStyle =
+        "#ffcc99";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        350,
+        100,
+        18,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    // BODY
+
+    ctx.fillStyle =
+        "#e63946";
+
+
+    ctx.fillRect(
+        335,
+        115,
+        30,
+        45
+    );
+
+
+    // HAT
+
+    ctx.fillStyle =
+        "#333";
+
+
+    ctx.fillRect(
+        325,
+        75,
+        50,
+        10
+    );
+
+
+    ctx.fillRect(
+        337,
+        65,
+        26,
+        15
+    );
+
+}
+
+
+// ==================================================
+// DRAW ROD
+// ==================================================
+
+function drawRod() {
+
+
+    // ROD
+
+    ctx.strokeStyle =
+        "#5a3515";
+
+    ctx.lineWidth = 5;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        365,
+        125
+    );
+
+    ctx.lineTo(
+        430,
+        100
+    );
+
+    ctx.stroke();
+
+
+    // LINE
+
+    ctx.strokeStyle =
+        "#ffffff";
+
+    ctx.lineWidth = 2;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        430,
+        100
+    );
+
+    ctx.lineTo(
+        hook.x,
+        hook.y
+    );
+
+    ctx.stroke();
+
+
+    // HOOK LINE
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        hook.x,
+        hook.y
+    );
+
+    ctx.lineTo(
+        hook.x,
+        hook.y + 30
+    );
+
+    ctx.stroke();
+
+
+    // HOOK
+
+    ctx.strokeStyle =
+        "#dddddd";
+
+    ctx.lineWidth = 3;
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        hook.x,
+        hook.y + 30,
+        9,
+        0,
+        Math.PI
+    );
+
+    ctx.stroke();
+
+}
+
+
+// ==================================================
+// DRAW FISH
+// ==================================================
+
+function drawFish() {
+
+
+    for (
+        const fish of fishes
+    ) {
+
+
+        // BODY
+
+        ctx.fillStyle =
+            fish.color;
+
+
+        ctx.beginPath();
+
+
+        ctx.ellipse(
+
+            fish.x +
+            fish.width / 2,
+
+            fish.y,
+
+            fish.width / 2,
+
+            fish.height / 2,
+
+            0,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        ctx.fill();
+
+
+        // TAIL
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            fish.x,
+            fish.y
+        );
+
+
+        ctx.lineTo(
+            fish.x - 24,
+            fish.y - 18
+        );
+
+
+        ctx.lineTo(
+            fish.x - 24,
+            fish.y + 18
+        );
+
+
+        ctx.closePath();
+
+
+        ctx.fill();
+
+
+        // EYE
+
+        ctx.fillStyle =
+            "black";
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+
+            fish.x
+            +
+            fish.width
+            -
+            12,
+
+            fish.y - 6,
+
+            4,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        ctx.fill();
+
+
+        // PRICE
+
+        ctx.fillStyle =
+            "white";
+
+        ctx.font =
+            "bold 13px Arial";
+
+        ctx.textAlign =
+            "center";
+
+
+        ctx.fillText(
+
+            "$" + fish.value,
+
+            fish.x +
+            fish.width / 2,
+
+            fish.y +
+            fish.height +
+            18
+
+        );
+
+    }
+
+}
+
+
+// ==================================================
+// DRAW BUBBLES
+// ==================================================
+
+function drawBubbles() {
+
+    ctx.strokeStyle =
+        "rgba(255,255,255,0.45)";
+
+    ctx.lineWidth = 2;
+
+
+    for (
+        const bubble of bubbles
+    ) {
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+
+            bubble.x,
+
+            bubble.y,
+
+            bubble.size,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        ctx.stroke();
+
+    }
+
+}
+
+
+// ==================================================
+// DRAW
+// ==================================================
+
+function draw() {
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    drawSky();
+
+    drawWater();
+
+    drawBubbles();
+
+    drawBoat();
+
+    drawFish();
+
+    drawRod();
+
+}
+
+
+// ==================================================
+// UPDATE UI
+// ==================================================
+
+function updateUI() {
+
+
+    moneyText.textContent =
+        money;
+
+
+    quotaText.textContent =
+        quota;
+
+
+    levelText.textContent =
+        level;
+
+
+    highScoreText.textContent =
+        highScore;
+
+
+    // TIMER
+
+    const percentage =
+        (
+            timeLeft /
+            TOTAL_TIME
+        )
+        *
+        100;
+
+
+    timerBar.style.width =
+        percentage + "%";
+
+
+    timerText.textContent =
+        Math.ceil(
+            timeLeft
+        )
+        +
+        "s";
+
+
+    // TIMER COLOR
+
+    if (
+        timeLeft <= 15
+    ) {
+
+        timerBar.style.background =
+            "#ff4444";
+
+    }
+
+    else if (
+        timeLeft <= 40
+    ) {
+
+        timerBar.style.background =
+            "#ffb703";
+
+    }
+
+    else {
+
+        timerBar.style.background =
+            "#2ee66b";
+
+    }
+
+
+    // UPGRADE BUTTON
+
+    upgradeBtn.textContent =
+        "⚡ Upgrade ($"
+        +
+        upgradeCost
+        +
+        ")";
+
+}
+
+
+// ==================================================
+// GAME LOOP
+// ==================================================
+
+let lastTime = 0;
+
+
+function gameLoop(timestamp) {
+
+
+    if (
+        lastTime === 0
+    ) {
+
+        lastTime =
+            timestamp;
+
+    }
+
+
+    let deltaTime =
+        (
+            timestamp -
+            lastTime
+        )
+        /
+        1000;
+
+
+    lastTime =
+        timestamp;
+
+
+    // Safety
+    if (
+        deltaTime > 0.1
+    ) {
+
+        deltaTime = 0.1;
+
+    }
+
+
+    if (
+        !gameOver
+    ) {
+
+
+        updateHook();
+
+
+        updateFish();
+
+
+        checkCollision();
+
+
+        updateFishRespawn(
+            deltaTime
+        );
+
+
+        updateBubbles();
+
+
+        updateTimer(
+            deltaTime
+        );
+
+    }
+
+
+    // DRAW SETIAP FRAME
+
+    draw();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+// ==================================================
+// INITIALIZE
+// ==================================================
+
+createBubbles();
+
+startLevel();
+
+updateUI();
+
+requestAnimationFrame(
+    gameLoop
+);
+
+
+</script>
+
+</body>
+
+</html>
